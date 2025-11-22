@@ -4,7 +4,7 @@ import Graph3D from "../components/Graph3D";
 import { Upload, BrainCircuit, Share2 } from "lucide-react";
 
 // CHANGE THIS URL TO YOUR RENDER BACKEND URL AFTER DEPLOYMENT
-const API_URL = "http://127.0.0.1:8000"; 
+const API_URL = "https://neurograph-kfgb.onrender.com"; 
 
 export default function Home() {
   const [graphData, setGraphData] = useState(null);
