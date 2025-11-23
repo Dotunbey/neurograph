@@ -58,17 +58,46 @@ def get_karate_data():
     return G, train_data
 
 def process_csv_graph(df):
-    """Converts uploaded CSV to PyG Data and NetworkX Graph."""
-    # Create NetworkX graph from CSV
-    G = nx.from_pandas_edgelist(df, source=df.columns[0], target=df.columns[1])
+    """
+    Smart CSV Processor.
+    Handles:
+    1. Simple Edge Lists (Source, Target)
+    2. BioGRID Chemical Data (Official Symbol, Chemical Name)
+    """
+    
+    # --- STRATEGY 1: Check for BioGRID format ---
+    if 'Official Symbol' in df.columns and 'Chemical Name' in df.columns:
+        print("🧬 Detected BioGRID Chemical Dataset")
+        # Rename columns to standard format
+        df = df.rename(columns={'Official Symbol': 'source', 'Chemical Name': 'target'})
+        # Keep only the relevant columns
+        df = df[['source', 'target']]
+
+    # --- STRATEGY 2: Check for Standard 'Source/Target' ---
+    elif 'Source' in df.columns and 'Target' in df.columns:
+        print("📄 Detected Standard Edge List")
+        df = df.rename(columns={'Source': 'source', 'Target': 'target'})
+
+    # --- STRATEGY 3: Fallback (Take 1st and 2nd columns) ---
+    else:
+        print("⚠️ Unknown format, using first two columns as Source/Target")
+        df.columns.values[0] = 'source'
+        df.columns.values[1] = 'target'
+        df = df.iloc[:, :2]
+
+    # Clean data
+    df = df.dropna()
+    
+    # Create Graph
+    G = nx.from_pandas_edgelist(df, source='source', target='target')
     
     # Convert to PyG
     data = from_networkx(G)
     
-    # Add dummy features (Identity Matrix) since CSVs usually don't have node features
+    # Add identity features (One-Hot Encoding)
     data.x = torch.eye(G.number_of_nodes(), dtype=torch.float)
     
-    # Split
+    # Split for training
     transform = T.RandomLinkSplit(num_val=0.05, num_test=0.1, is_undirected=True, add_negative_train_samples=False)
     train_data, val_data, test_data = transform(data)
     
