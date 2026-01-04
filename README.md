@@ -23,4 +23,4 @@ A soon Production-Ready Graph Neural Network platform that visualizes networks i
 3. Root Directory: `frontend`
 4. Build Command: `npm run build`
 5. Publish Directory: `out`
-6. Deploy!
+6. Deploy
