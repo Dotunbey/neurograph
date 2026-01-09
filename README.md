@@ -24,3 +24,8 @@ A soon Production-Ready Graph Neural Network platform that visualizes networks i
 4. Build Command: `npm run build`
 5. Publish Directory: `out`
 6. Deploy
+
+[Frontend (Next.js)] --> [API (FastAPI/Python)] --> [PyTorch GNN Model]
+                                  |
+                               [Docker]
+
