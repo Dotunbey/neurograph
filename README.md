@@ -19,7 +19,7 @@ A soon Production-Ready Graph Neural Network platform that visualizes networks i
 
 ### 3. Deploy Frontend
 1. Create a new **Static Site** on Render.
-2. Connect this repo.
+2. Connect repo.
 3. Root Directory: `frontend`
 4. Build Command: `npm run build`
 5. Publish Directory: `out`
